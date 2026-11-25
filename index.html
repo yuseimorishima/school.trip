@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="那須高原と大田原・黒羽の見どころを、立体イラストマップで探す観光ガイド。">
+<title>那須・大田原 立体観光マップ</title>
+<style>
+:root{color-scheme:light;--paper:#f4f2e8;--ink:#18372e;--leaf:#244c39;--muted:#526355;--line:#d7ddce}
+*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.65 system-ui,sans-serif}button,a{-webkit-tap-highlight-color:transparent}button{font:inherit;cursor:pointer;color:inherit}a{color:inherit}button:focus-visible,a:focus-visible{outline:3px solid #c2602c;outline-offset:4px}header{background:var(--leaf);color:#fff;padding:.8rem max(5vw,1rem);font-weight:750;letter-spacing:.12em}main{max-width:1440px;margin:auto;padding:clamp(1rem,4vw,3.8rem)}h1,h2,p{margin:0}h1{font-family:Georgia,"Yu Mincho",serif;font-size:clamp(2rem,5.5vw,5rem);line-height:1.15;letter-spacing:.025em}.intro p{margin:.8rem 0 1.6rem;color:var(--muted)}.controls{display:flex;align-items:center;justify-content:space-between;gap:.65rem;flex-wrap:wrap;margin-bottom:.8rem}.group{display:flex;gap:.35rem;flex-wrap:wrap}.group button,.view{border:1px solid var(--line);background:#fffdf6;border-radius:2rem;padding:.43rem .85rem;font-weight:700;font-size:.88rem}.group button[aria-pressed=true],.view[aria-pressed=true]{background:var(--leaf);color:white;border-color:var(--leaf)}.layout{display:grid;grid-template-columns:minmax(0,2.7fr) minmax(250px,1fr);gap:1rem;align-items:start}.map{position:relative;isolation:isolate;height:clamp(360px,56vw,650px);overflow:hidden;border-radius:1.1rem;background:radial-gradient(ellipse at 50% 40%,#eef1dd,#d9e2cd);border:1px solid #d0dac6}.map canvas,.pins{position:absolute;inset:0;width:100%;height:100%}.pins{pointer-events:none}.pin{position:absolute;pointer-events:auto;transform:translate(-50%,-100%);display:grid;justify-items:center;border:0;background:none;padding:0;white-space:nowrap;z-index:1}.pin:hover,.pin[aria-pressed=true]{z-index:2}.pin b{display:grid;place-items:center;width:33px;height:33px;border:2px solid white;border-radius:50%;background:#284e3b;color:#fff;box-shadow:0 3px 9px #17382e66;font-size:.82rem}.pin.east b{background:#8d492e}.pin[aria-pressed=true] b{outline:3px solid #eaa754;outline-offset:2px}.pin span{display:block;padding:.1rem .4rem;margin-bottom:.2rem;border-radius:.45rem;background:#fffdf5;color:#17382e;font-size:clamp(.66rem,1.3vw,.86rem);font-weight:800;box-shadow:0 1px 5px #17382e30}.compass{position:absolute;top:1rem;right:1rem;font-weight:800;text-align:center;line-height:1.1;color:#274535}.legend{position:absolute;bottom:.8rem;left:.8rem;display:flex;gap:.7rem;background:#fffcf0ed;border-radius:.65rem;padding:.35rem .6rem;font-size:.72rem;font-weight:750}.legend i{display:inline-block;width:.65rem;height:.65rem;border-radius:50%;background:#284e3b;margin-right:.25rem}.legend span+span i{background:#8d492e}.note{font-size:.78rem;color:var(--muted);margin:.45rem .2rem 1rem}.panel{overflow:hidden;background:#fffdf6;border:1px solid var(--line);border-radius:1.1rem}.photo{margin:0}.photo img{display:block;width:100%;height:155px;object-fit:cover;background:#dce6d0}.photo figcaption{padding:.25rem .8rem 0;font-size:.68rem;color:var(--muted)}.detail{padding:1rem}.eyebrow{font-size:.79rem;letter-spacing:.12em;color:#6b4d34;font-weight:800}.detail h2{font-size:clamp(1.22rem,2vw,1.8rem);margin:.12rem 0 .35rem;line-height:1.3}.detail p{font-size:.92rem}[hidden]{display:none!important}.links{margin-top:.85rem;display:flex;gap:.65rem;flex-wrap:wrap}.links a{font-size:.83rem;font-weight:750;text-underline-offset:.16em}.directory{margin:1.2rem 0}.directory h2{font-size:1.2rem;margin-bottom:.55rem}.results{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(155px,100%),1fr));gap:.4rem}.results button{text-align:left;border:1px solid var(--line);background:#fffdf6;border-radius:.65rem;padding:.5rem .65rem;font-weight:700;font-size:.82rem}.results button[aria-pressed=true]{background:#dce7d5;border-color:#708b6f}.results small{display:block;color:var(--muted);font-weight:550}.results b{color:#7e4c2e;margin-right:.35rem}
+@media(max-width:800px){.layout{grid-template-columns:1fr}.map{height:clamp(360px,80vw,520px)}.panel:not([hidden]){display:flex}.photo{width:34%;flex-shrink:0}.photo[hidden]{display:none}.photo img{height:120px}.detail{flex:1}}@media(max-width:520px){.pin span{display:none}.pin[aria-pressed=true] span{display:block}.pin b{width:38px;height:38px}.map{height:370px}.photo{width:32%}.photo figcaption{padding:.2rem .3rem}.detail{padding:.75rem}}
+</style>
+</head>
+<body>
+<header>栃木県北部の観光ガイド</header>
+<main>
+<section class="intro">
+<h1>那須・大田原<br>立体観光マップ</h1>
+<p>山のほうへ、川の向こうへ。地図のピンから、気になる場所をのぞいてみよう。</p>
+</section>
+<div class="controls">
+<div class="group" id="regions" role="group" aria-label="地図の範囲">
+<button type="button" data-region="all" aria-pressed="true">全体マップ</button>
+<button type="button" data-region="nasu" aria-pressed="false">那須高原</button>
+<button type="button" data-region="otawara" aria-pressed="false">大田原・黒羽</button>
+</div>
+<button type="button" class="view" id="view" aria-pressed="false">真上から見る</button>
+</div>
+<div class="layout">
+<div>
+<div class="map" id="map" aria-label="観光スポットの見取り図">
+<canvas id="terrain" aria-hidden="true"></canvas>
+<div class="pins" id="pins" role="group" aria-label="観光スポットのピン"></div>
+<div class="compass" aria-hidden="true">北<br>↑</div>
+<div class="legend"><span><i></i>那須高原</span><span><i></i>大田原・黒羽</span></div>
+</div>
+<p class="note">地形と位置関係を簡略化した見取り図です。詳しい場所は各スポットの「地図で開く」へ。</p>
+</div>
+<aside class="panel" aria-label="スポットの詳細">
+<figure class="photo" id="photo" hidden><img id="picture" alt=""><figcaption id="credit"></figcaption></figure>
+<div class="detail" aria-live="polite">
+<div class="eyebrow" id="area">観光スポット</div>
+<h2 id="name">どこを見てみる？</h2>
+<p id="description">地図のピンか、下のスポット一覧を選ぶと、見どころや公式案内がここに表示されます。</p>
+<div class="links" id="links" hidden><a id="official">公式案内 ↗</a><a id="directions">地図で開く ↗</a></div>
+</div>
+</aside>
+</div>
+<section class="directory" aria-labelledby="directory-title">
+<h2 id="directory-title">地図にあるスポット</h2>
+<div class="results" id="results"></div>
+</section>
+<noscript>立体マップの表示にはJavaScriptを有効にしてください。</noscript>
+</main>
+<script>
+const regions = {
+  all: {bounds:[0,0,1,1], labels:[['那須高原',.26,.31],['大田原・黒羽',.63,.59],['那珂川',.83,.53]]},
+  nasu: {bounds:[.02,.02,.55,.48], labels:[['那須連山',.14,.13],['那須湯本',.3,.32]]},
+  otawara: {bounds:[.41,.44,.98,.98], labels:[['黒羽',.65,.65],['那珂川',.8,.59]]}
+};
+const mountainPhoto = {
+  url:'https://upload.wikimedia.org/wikipedia/commons/d/dd/Nasu_chausudake.jpg',
+  alt:'姥ヶ平から見た茶臼岳',
+  page:'https://commons.wikimedia.org/wiki/File:Nasu_chausudake.jpg',
+  author:'uraomote_yamaneko', license:'3.0'
+};
+const templePhoto = {
+  url:'https://upload.wikimedia.org/wikipedia/commons/e/ef/Tozan_Unganji_Temple_02.jpg',
+  alt:'雲巌寺の山門に続く朱塗りの橋',
+  page:'https://commons.wikimedia.org/wiki/File:Tozan_Unganji_Temple_02.jpg',
+  author:'Σ64', license:'4.0'
+};
+const spots = [
+  {name:'那須ロープウェイ',short:'ロープウェイ',region:'nasu',type:'山の展望',x:.19,y:.17,url:'https://www.nasu-ropeway.jp/information/',description:'茶臼岳の山腹へ。高原を見下ろす眺めを楽しめます。運行日や当日の運行状況は公式サイトへ。',photo:mountainPhoto},
+  {name:'殺生石',short:'殺生石',region:'nasu',type:'火山と伝説',x:.31,y:.26,url:'https://www.nasukogen.org/charm/',description:'那須湯本にある九尾の狐伝説ゆかりの史跡。温泉街のそばに火山地帯ならではの岩場が広がります。'},
+  {name:'那須平成の森',short:'平成の森',region:'nasu',type:'森の散策',x:.44,y:.19,url:'https://nasuheisei-f.jp/',description:'遊歩道で森の季節を感じたり、ガイドウォークで自然を観察したりできる場所です。'},
+  {name:'那須高原 南ヶ丘牧場',short:'南ヶ丘牧場',region:'nasu',type:'牧場体験',x:.37,y:.39,url:'https://minamigaoka.co.jp/',description:'牧場の動物に出会い、乳製品やソフトクリームを楽しめます。体験の実施状況は公式案内へ。'},
+  {name:'黒羽芭蕉の館',short:'芭蕉の館',region:'otawara',type:'文学と歴史',x:.62,y:.7,url:'https://www.city.ohtawara.tochigi.jp/docs/2013082780058/',description:'「おくのほそ道」の旅で黒羽に滞在した松尾芭蕉にまつわる資料や、黒羽藩主・大関家の資料を展示しています。'},
+  {name:'雲巌寺',short:'雲巌寺',region:'otawara',type:'寺と里山',x:.87,y:.76,url:'https://www.city.ohtawara.tochigi.jp/docs/2013082765673/',description:'山あいにある禅寺。朱塗りの反り橋の先に山門と石段が続きます。',photo:templePhoto},
+  {name:'栃木県なかがわ水遊園',short:'なかがわ水遊園',region:'otawara',type:'川と水族館',x:.68,y:.89,url:'https://www.tnap.jp/',description:'地元の那珂川から世界の川まで、淡水の生きものを観察できる水族館です。'}
+];
+const get = id => document.getElementById(id);
+const canvas = get('terrain');
+const context = canvas.getContext('2d');
+let region = 'all';
+let overhead = false;
+let selected = null;
+const terrainHeight = (x,y) => {
+  const hill = (cx,cy,sx,sy,h) => h*Math.exp(-(((x-cx)/sx)**2 + ((y-cy)/sy)**2));
+  return hill(.13,.17,.13,.13,.19)+hill(.28,.12,.17,.13,.1)+hill(.93,.69,.18,.22,.07)
+    + .009*Math.sin(38*x+7*y)*Math.cos(29*y-3*x);
+};
+const river = y => .56 + .27*y + .054*Math.sin(13*y);
+function draw() {
+  const {width:w,height:h} = get('map').getBoundingClientRect();
+  const dpr = Math.min(devicePixelRatio,2);
+  canvas.width = Math.round(w*dpr);
+  canvas.height = Math.round(h*dpr);
+  context.setTransform(dpr,0,0,dpr,0,0);
+  const {bounds:[left,top,right,bottom],labels} = regions[region];
+  const altitude = Math.min(w,h)*(region === 'all' ? 1.32 : 1.65);
+  const flatWidth = w*(overhead ? .86 : .91);
+  function point(x,y,elevation=terrainHeight(x,y)) {
+    const u=(x-left)/(right-left), v=(y-top)/(bottom-top);
+    const stretch=overhead ? 1 : .67+.33*v;
+    return [w/2+(u-.5)*flatWidth*stretch, h*(overhead ? .15 : .25)+v*h*(overhead ? .72 : .59)-(overhead ? 0 : elevation*altitude)];
+  }
+  function polygon(points,color) {
+    context.beginPath();
+    points.forEach(([x,y],i)=>i ? context.lineTo(x,y) : context.moveTo(x,y));
+    context.closePath();
+    context.fillStyle=color;
+    context.fill();
+    context.strokeStyle=color;
+    context.lineWidth=1;
+    context.stroke();
+  }
+  if(!overhead) {
+    const edge=Array.from({length:41},(_,i)=>point(left+(right-left)*i/40,bottom));
+    polygon([...edge,...edge.slice().reverse().map(([x,y])=>[x,y+13])],'#68774f');
+  }
+  const cols=55, rows=53;
+  for(let row=0;row<rows;row++) {
+    const y=top+(bottom-top)*row/rows, nextY=top+(bottom-top)*(row+1)/rows;
+    for(let col=0;col<cols;col++) {
+      const x=left+(right-left)*col/cols, nextX=left+(right-left)*(col+1)/cols;
+      const elevation=terrainHeight(x,y);
+      const slope=terrainHeight(x+.01,y+.01)-elevation;
+      const band=Math.floor((elevation+.012)*86)%2;
+      const noise=Math.sin(col*24.2+row*12.3)*1.3;
+      const light=Math.min(78,Math.max(31,66-elevation*104-slope*750+band*3+noise));
+      const color='hsl('+ (84+elevation*137) +' 28% '+light+'%)';
+      polygon([point(x,y),point(nextX,y),point(nextX,nextY),point(x,nextY)],color);
+    }
+  }
+  const water=[];
+  for(let step=0;step<=120;step++) {
+    const y=top+(bottom-top)*step/120;
+    const x=river(y);
+    if(x>=left+.012 && x<=right-.012) water.push([x,y]);
+  }
+  if(water.length>1) polygon([...water.map(([x,y])=>point(x-.01,y)),...water.reverse().map(([x,y])=>point(x+.01,y))],'#4b8f97');
+  context.font='bold '+(w<500 ? 13 : 19)+'px system-ui';
+  context.textAlign='center';
+  context.lineWidth=3;
+  context.strokeStyle='#eff2dd';
+  context.fillStyle='#214a3b';
+  for(const [label,x,y] of labels) {
+    const [px,py]=point(x,y);
+    context.strokeText(label,px,py);
+    context.fillText(label,px,py);
+  }
+  for(const pin of get('pins').children) {
+    const spot=spots[Number(pin.dataset.index)];
+    const [x,y]=point(spot.x,spot.y);
+    pin.style.left=x+'px';
+    pin.style.top=Math.max(60,y)+'px';
+  }
+}
+function buttonFor(spot,index,isPin) {
+  const button=document.createElement('button');
+  button.type='button';
+  button.dataset.index=index;
+  button.setAttribute('aria-pressed',String(selected===index));
+  const number=document.createElement('b');
+  number.textContent=index+1;
+  number.setAttribute('aria-hidden','true');
+  if(isPin) {
+    button.className='pin'+(spot.region==='otawara' ? ' east' : '');
+    button.setAttribute('aria-label',spot.name);
+    const label=document.createElement('span');
+    label.textContent=spot.short;
+    button.append(label,number);
+  } else {
+    const type=document.createElement('small');
+    type.textContent=spot.type;
+    button.append(number,document.createTextNode(spot.name),type);
+  }
+  button.addEventListener('click',()=>selectSpot(index));
+  return button;
+}
+function selectSpot(index) {
+  selected=index;
+  for(const button of document.querySelectorAll('[data-index]')) {
+    button.setAttribute('aria-pressed',String(Number(button.dataset.index)===index));
+  }
+  const spot=spots[index];
+  get('area').textContent=spot ? spot.type : '観光スポット';
+  get('name').textContent=spot ? spot.name : 'どこを見てみる？';
+  get('description').textContent=spot ? spot.description : '地図のピンか、下のスポット一覧を選ぶと、見どころや公式案内がここに表示されます。';
+  get('links').hidden=!spot;
+  get('photo').hidden=!spot?.photo;
+  if(!spot) return;
+  get('official').href=spot.url;
+  get('directions').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(spot.name+' 栃木県');
+  if(spot.photo) {
+    const {url,alt,page,author,license}=spot.photo;
+    get('picture').src=url;
+    get('picture').alt=alt;
+    const source=document.createElement('a');
+    source.href=page;
+    source.textContent=author+' / Wikimedia Commons';
+    const terms=document.createElement('a');
+    terms.href='https://creativecommons.org/licenses/'+(license==='3.0' ? 'by-sa' : 'by')+'/'+license+'/';
+    terms.textContent=license==='3.0' ? 'CC BY-SA 3.0' : 'CC BY 4.0';
+    get('credit').replaceChildren(source,document.createTextNode(' · '),terms,document.createTextNode(' · 表示時にトリミング'));
+  }
+}
+function updateRegion() {
+  get('pins').replaceChildren();
+  get('results').replaceChildren();
+  spots.forEach((spot,index)=>{
+    if(region==='all'||spot.region===region) {
+      get('pins').append(buttonFor(spot,index,true));
+      get('results').append(buttonFor(spot,index,false));
+    }
+  });
+  draw();
+}
+get('regions').addEventListener('click',event=>{
+  const button=event.target.closest('[data-region]');
+  if(!button || button.dataset.region===region) return;
+  region=button.dataset.region;
+  for(const item of get('regions').children) item.setAttribute('aria-pressed',String(item===button));
+  if(selected!==null && region!=='all' && spots[selected].region!==region) selectSpot(null);
+  updateRegion();
+});
+get('view').addEventListener('click',event=>{
+  overhead=!overhead;
+  event.currentTarget.setAttribute('aria-pressed',String(overhead));
+  draw();
+});
+get('picture').addEventListener('error',()=>{get('photo').hidden=true;});
+new ResizeObserver(draw).observe(get('map'));
+updateRegion();
+</script>
+</body>
+</html>
