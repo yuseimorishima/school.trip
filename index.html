@@ -15,16 +15,16 @@
 <body>
 <header><div class="brand"><i aria-hidden="true">↗</i> よりみち 那須・大田原</div><a class="top-link" href="#spots-title">見どころ一覧 ↓</a></header>
 <main>
-<section class="intro"><div><h1>街をのぞいて、<br>よりみち。</h1><p>航空写真で街を見下ろし、観光ピンから見どころを探そう。</p></div>
+<section class="intro"><div><h1>街をのぞいて、<br>よりみち。</h1><p>動くジオラマを回して、街並みや観光スポットをのぞいてみよう。</p></div>
 <div class="tabs" role="group" aria-label="見るエリア" id="tabs"><button type="button" data-area="otawara" aria-pressed="true">大田原・黒羽</button><button type="button" data-area="nasu" aria-pressed="false">那須高原</button></div></section>
 <div class="mode" role="group" aria-label="地図の表示">
-<button type="button" id="aerialMode" aria-pressed="true">航空写真</button>
-<button type="button" id="modelMode" aria-pressed="false">動くジオラマ</button>
+<button type="button" id="aerialMode" aria-pressed="false">航空写真</button>
+<button type="button" id="modelMode" aria-pressed="true">動くジオラマ</button>
 </div>
 <section class="stage" aria-label="観光マップ">
 <div class="scene" id="scene">
-<div id="aerial" aria-label="航空写真"></div>
-<canvas id="town" hidden aria-hidden="true"></canvas>
+<div id="aerial" hidden aria-label="航空写真"></div>
+<canvas id="town" aria-hidden="true"></canvas>
 <div class="pins" id="pins" role="group" aria-label="観光ピン"></div>
 <div class="hint" id="hint">ドラッグで移動</div>
 <a class="source" id="source" href="https://maps.gsi.go.jp/development/ichiran.html">出典：国土地理院</a>
@@ -166,8 +166,8 @@ const spots = [
     "description": "箒川沿いの大田原市滝沢にある滝。近くで石に彫られた不動明王を祀ったことが、滝の名の由来と伝わります。",
     "model": [
       2.25,
-      8.05,
-      0.65
+      8.28,
+      1.53
     ],
     "location": "36.816988,140.003272",
     "number": 8
@@ -194,7 +194,7 @@ const get = id => document.getElementById(id);
 const canvas = get('town');
 const ctx = canvas.getContext('2d');
 let area = 'otawara';
-let photoMode=true;
+let photoMode=false;
 let mapZoom=15;
 let mapCenter;
 const tiles=new Map();
@@ -370,10 +370,7 @@ function buildOtawara() {
   }
   for(let i=0;i<5;i++)house(6.65+i*.89,5.05,.69,.87,.51+(i%3)*.17,[colors.cream,'#e9b58b','#cbd4b5'][i%3],[colors.teal,colors.red,colors.roof][i%3]);
   rows(6.65,6.58,8,.57,'#668c55');
-  box(1.2,8.08,1.57,.59,.08,colors.water);
-  box(1.2,7.93,1.23,.19,.38,'#8f9a8c');
-  box(1.36,8.11,.65,.13,.28,'#8bd1cf',.07);
-  rows(.7,8.9,5,.54,'#637f49');
+  buildFudoFalls();
   box(7.58,8.03,2.3,1.02,.63,'#a1c6c4');
   box(7.44,7.98,2.6,.46,.13,'#3c8290',.63);
   box(7.79,8.02,1.9,.32,.14,'#6aaab0',.75);
@@ -381,6 +378,45 @@ function buildOtawara() {
   rows(10,8.58,3,.43,'#c78a8b');
   box(10.29,2.65,.78,.7,.24,'#a9a186');
   tree(10.9,2.88,'#ad7e88');
+}
+const cascades=[
+  {x:1.56,z:8.31,height:.82,width:.19},
+  {x:1.94,z:8.32,height:1.02,width:.28},
+  {x:2.30,z:8.33,height:.72,width:.15}
+];
+function buildFudoFalls(){
+  tile(.65,7.75,2.74,1.94,'#687f50');
+  tile(1.22,8.22,1.66,.92,'#3d766a');
+  tile(1.43,8.84,1.29,.54,'#56877a');
+  tile(1.75,9.20,.63,.42,'#62988c');
+  for(let i=0;i<12;i++){
+    const x=1.08+i*.145;
+    const h=.71+.29*Math.sin(i*.27)+.11*Math.sin(i*1.93);
+    box(x,7.79+(i%3)*.032,.19,.45,h,['#686d64','#747c6c','#59655c'][i%3]);
+    box(x+.012,7.83,.15,.28,.036,['#77894f','#637545','#8a955e'][i%3],h);
+    box(x-.135,8.33+(i%4)*.23,.22,.16,.075+(i%3)*.039,['#7d8068','#6c7961','#8a8c71'][i%3]);
+  }
+  for(const {x,z,height,width} of cascades){
+    face([[x,height,z],[x+width,height,z],[x+width*1.08,.028,z+.18],[x-.045,.028,z+.18]],'#9bc1bb');
+  }
+  for(const [x,z,h] of [[.79,7.91,1.28],[1.05,7.64,1.47],[2.45,7.7,1.49],[2.88,7.89,1.22],[3.06,8.29,1.04],[.87,8.55,.89],[3.11,8.85,.83]])tree(x,z,'#58734c',h);
+  tile(2.94,8.48,.28,1.11,'#c5b48c');
+}
+function animateFalls(time){
+  cascades.forEach(({x,z,height,width},index)=>{
+    for(let i=0;i<12;i++){
+      const t=(time*(.75+index*.13)+i*.137)%1;
+      const lateral=x+width*((i*7)%13)/13;
+      const y=height*(1-t);
+      const front=z+.185*t+.014;
+      const end=Math.min(1,t+.13);
+      face([[lateral,y,front],[lateral+.023,y,front],[lateral+.031,height*(1-end),z+.185*end+.017],[lateral+.007,height*(1-end),z+.185*end+.017]],i%3===0?'#f6fcf4':'#d2ece6');
+    }
+    for(let i=0;i<7;i++){
+      const t=(time*.94+i*.229+index*.2)%1;
+      box(x+width/2+Math.sin(i*2.4)*t*.26,z+.18+t*.5,.075*(1-t)+.018,.018,.005,i%2?'#b6d9cb':'#e0f0df',.019);
+    }
+  });
 }
 function buildNasu() {
   tile(.25,.25,4.52,3.42,'#919e75');
@@ -487,6 +523,7 @@ function movingObjects(time) {
     box(cableX,cableZ,.27,.22,.23,'#b95749',cableY-.43);
     box(cableX+.025,cableZ+.224,.22,.02,.11,'#a0ccd0',cableY-.37);
   }else{
+    animateFalls(time);
     for(let i=0;i<8;i++){
       const z=-2.78+(i*2.19+time*.47)%16.38;
       box(5.7+(i%3)*.15,z,.14,.03,.003,'#bfdfd8',.007);
@@ -709,7 +746,7 @@ new ResizeObserver(render).observe(get('scene'));
 get('aerialMode').addEventListener('click',()=>switchMode(true));
 get('modelMode').addEventListener('click',()=>switchMode(false));
 loadArea();
-switchMode(true);
+switchMode(false);
 </script>
 </body>
 </html>
