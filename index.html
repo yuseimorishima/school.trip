@@ -34,7 +34,7 @@
 <div class="detail" id="detail" hidden aria-live="polite"><h2 id="name"></h2><p id="description"></p><figure id="photo" hidden><img id="picture" alt=""><figcaption id="credit" class="credit"></figcaption></figure><div class="links"><button type="button" id="focusSpot">模型で近づく</button><a id="official">公式案内 ↗</a><a id="directions">実際の地図 ↗</a></div></div>
 </aside></section>
 </main>
-<footer>航空写真の撮影時期は場所によって異なります。ジオラマは観光スポットを題材にした模型です。</footer>
+<footer>航空写真の撮影時期は場所によって異なります。大田原・黒羽のジオラマは、観光スポットの実際の位置関係をもとに配置しています。街並みや道路は模型用に簡略化しています。</footer>
 <noscript>ミニチュアマップを見るにはJavaScriptを有効にしてください。</noscript>
 <script>
 const spots = [
@@ -275,7 +275,7 @@ function switchMode(showPhoto){
   get('source').hidden=!showPhoto;
   get('hint').textContent=showPhoto?'ドラッグで移動':'ドラッグで回転';
   get('focusSpot').textContent=showPhoto?'航空写真で近づく':'模型で近づく';
-  get('zoomIn').disabled=!showPhoto&&zoom>=3;
+  get('zoomIn').disabled=!showPhoto&&zoom>=zoomLimit();
   get('zoomOut').disabled=!showPhoto&&zoom<=.85;
   render();
   syncMotion();
@@ -293,15 +293,37 @@ let previousFrame=null;
 let frameId;
 const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)');
 let paused=reducedMotion.matches;
-const townCorners=[[-4,0,-3],[16,0,-3],[16,0,14],[-4,0,14]];
+const modelBounds={nasu:[-4,-3,16,14],otawara:[-3,-2,43,29]};
+const fallsOrigin=[2.25,8.28];
+let offsetX=0,offsetZ=0;
+for(const spot of spots){
+  if(spot.region!=='otawara')continue;
+  const [lat,lon]=spot.location.split(',').map(Number);
+  // Use the same distance scale east–west and north–south, corrected for latitude.
+  spot.model=[(lon-139.99)*180*Math.cos(36.85*Math.PI/180),(36.896-lat)*180,spot.model[2]];
+}
+function atLandmark(number,[x,z],draw){
+  const [targetX,targetZ]=spots.find(spot=>spot.number===number).model;
+  offsetX=targetX-x;
+  offsetZ=targetZ-z;
+  draw();
+  offsetX=0;
+  offsetZ=0;
+}
+function modelScale(w,h){
+  return zoom*(area==='otawara'
+    ? Math.min(w/58,h/(overhead?58:33))
+    : Math.min(w/26.8,h/(overhead?26:17)));
+}
+function zoomLimit(){return area==='otawara'?6:3;}
 const colors = {grass:'#a4bd79',garden:'#7d9e5d',sand:'#e9d5ac',road:'#d1bfa2',water:'#71b7bd',cream:'#f3daad',coral:'#dc896d',teal:'#6d9fa4',roof:'#486c73',red:'#a95843',olive:'#758758'};
 function shade(hex,factor) {
   const value=parseInt(hex.slice(1),16);
   const channels=[value>>16,(value>>8)&255,value&255];
   return '#'+channels.map(v=>Math.min(255,Math.round(v*factor)).toString(16).padStart(2,'0')).join('');
 }
-function face(points,color) { faces.push({points,color}); }
-function tile(x,z,w,d,color) { ground.push({points:[[x,0,z],[x+w,0,z],[x+w,0,z+d],[x,0,z+d]],color}); }
+function face(points,color) { faces.push({points:offsetX||offsetZ?points.map(([x,y,z])=>[x+offsetX,y,z+offsetZ]):points,color}); }
+function tile(x,z,w,d,color) { x+=offsetX;z+=offsetZ;ground.push({points:[[x,0,z],[x+w,0,z],[x+w,0,z+d],[x,0,z+d]],color}); }
 function box(x,z,w,d,h,color,y=0) {
   const a=[x,y,z],b=[x+w,y,z],c=[x+w,y,z+d],e=[x,y,z+d];
   const A=[x,y+h,z],B=[x+w,y+h,z],C=[x+w,y+h,z+d],E=[x,y+h,z+d];
@@ -339,45 +361,56 @@ function rows(x,z,count,spacing,color) {
   for(let i=0;i<count;i++)tree(x+i*spacing,z,color,.78+(i%3)*.12);
 }
 function buildOtawara() {
-  tile(.13,3.68,11.74,1.03,colors.road);
-  tile(3.68,.13,.93,9.74,colors.road);
-  tile(.15,7.03,11.7,.54,colors.sand);
-  tile(5.15,.1,1.13,9.8,colors.water);
-  tile(5.37,.1,.12,9.8,'#a4d5d4');
-  tile(5.97,.1,.09,9.8,'#8ac7cb');
-  tile(.55,.53,2.9,2.7,'#7f9e5e');
-  tile(6.75,.42,4.75,3.16,'#8ca968');
-  tile(.55,7.84,2.7,1.55,'#88a666');
-  tile(7.05,7.73,4.35,1.65,'#82a86d');
-  box(4.95,3.76,1.55,.8,.13,'#c99170');
-  box(4.95,3.76,1.55,.055,.28,'#ab5c52');
-  box(4.95,4.5,1.55,.055,.28,'#ab5c52');
-  box(5.02,7.13,1.42,.27,.1,'#e2c8a1');
-  box(.95,2.32,2.28,.58,.14,'#d6bd8b');
-  box(1.14,.75,1.95,1.43,.19,'#9b9b79');
-  house(1.48,1.04,1.28,.86,.67,colors.cream,'#536378');
-  box(1.37,1.97,1.48,.14,.18,'#cbb38a');
-  rows(.65,2.82,5,.58,'#c88d99');
-  rows(.95,.57,4,.58,'#78934e');
-  house(6.68,2.05,1.28,.89,.75,colors.cream,'#745f61');
-  house(9.02,.65,1.42,.78,.78,'#c78861','#4b6371');
-  box(9.05,1.53,1.65,.14,.13,'#a45b49');
-  rows(7.63,1.73,5,.57,'#537953');
-  for(let i=0;i<5;i++) {
-    const x=.65+i*.64;
-    house(x,5.02,.49,.68,.53+(i%3)*.21,[colors.cream,colors.coral,'#d3b18a'][i%3],[colors.teal,colors.red,colors.roof][i%3]);
-    house(x+.04,6.08,.52,.64,.43+(i%2)*.18,['#c9d6b4',colors.cream][i%2],[colors.roof,colors.olive][i%2]);
+  // Each landmark keeps its own detailed model within the larger landscape.
+  for(let z=-1;z<27;z+=4){
+    for(let x=-2;x<40;x+=4){
+      const tone=['#a4b47b','#b4bb81','#94a970'][(x+z+4)%3];
+      tile(x,z,3.4,2.8,tone);
+      if((x+z)%3===0)for(let row=0;row<6;row++)tile(x+.23+row*.48,z+.18,.07,2.42,'#c3c597');
+    }
   }
-  for(let i=0;i<5;i++)house(6.65+i*.89,5.05,.69,.87,.51+(i%3)*.17,[colors.cream,'#e9b58b','#cbd4b5'][i%3],[colors.teal,colors.red,colors.roof][i%3]);
-  rows(6.65,6.58,8,.57,'#668c55');
-  buildFudoFalls();
-  box(7.58,8.03,2.3,1.02,.63,'#a1c6c4');
-  box(7.44,7.98,2.6,.46,.13,'#3c8290',.63);
-  box(7.79,8.02,1.9,.32,.14,'#6aaab0',.75);
-  for(let i=0;i<5;i++)box(7.7+i*.42,9.05,.26,.035,.31,'#467583',.17);
-  rows(10,8.58,3,.43,'#c78a8b');
-  box(10.29,2.65,.78,.7,.24,'#a9a186');
-  tree(10.9,2.88,'#ad7e88');
+  tile(-3,4,46,.85,colors.road);
+  tile(7,-2,.72,31,colors.road);
+  tile(19,4.8,.59,22,colors.road);
+  for(let i=0;i<49;i++)tile(-2.8+i*.93,4.42,.37,.031,'#f2e7cc');
+  const riverBank=z=>23.8+1.35*Math.sin(z*.23);
+  for(let z=-2;z<29;z+=.5){
+    tile(riverBank(z)-.29,z,2.11,.51,'#7c9e6d');
+    tile(riverBank(z),z,1.53,.51,'#6ba4ad');
+  }
+  box(riverBank(4.4)-.28,4.02,2.12,.78,.13,'#a9937a');
+  for(const [x,z,count] of [[4.6,2.85,9],[4.5,5.35,9],[8.1,7.25,6],[17.5,5.1,5],[27,5.12,8]]){
+    for(let i=0;i<count;i++)house(x+i*.73,z,.48+(i%2)*.08,.66,.46+(i%3)*.17,['#e0c6a2','#dfae8e','#c8d0b1'][i%3],[colors.roof,colors.red,colors.olive][i%3]);
+  }
+  for(const [x,z] of [[32,8],[35,12],[36,3],[1,12],[15,21],[31,24]]) {
+    for(let r=0;r<3;r++) rows(x+r*.23,z+r*.65,5,.56,'#638557');
+  }
+  atLandmark(9,[2.7,2.6],()=>{
+    tile(.55,.53,2.9,2.7,'#7f9e5e');
+    box(.95,2.32,2.28,.58,.14,'#d6bd8b');
+    box(1.14,.75,1.95,1.43,.19,'#9b9b79');
+    house(1.48,1.04,1.28,.86,.67,colors.cream,'#536378');
+    rows(.65,2.82,5,.58,'#c88d99');
+  });
+  atLandmark(5,[7.1,3.15],()=>house(6.68,2.29,1.28,.89,.75,colors.cream,'#745f61'));
+  atLandmark(6,[9.5,1.35],()=>{
+    tile(8.46,.19,3,2.45,'#7c9867');
+    house(9.02,.65,1.42,.78,.78,'#c78861','#4b6371');
+    box(9.05,1.53,1.65,.14,.13,'#a45b49');
+    rows(8.7,.29,5,.5,'#537953');
+  });
+  atLandmark(7,[8.65,8.15],()=>{
+    tile(7.05,7.73,4.35,1.65,'#82a86d');
+    box(7.58,8.03,2.3,1.02,.63,'#a1c6c4');
+    box(7.44,7.98,2.6,.46,.13,'#3c8290',.63);
+    for(let i=0;i<5;i++)box(7.7+i*.42,9.05,.26,.035,.31,'#467583',.17);
+  });
+  atLandmark(8,fallsOrigin,buildFudoFalls);
+  atLandmark(11,[10.65,3.02],()=>{
+    tile(10.15,2.05,1.8,1.37,'#839b62');
+    box(10.29,2.65,.78,.7,.24,'#a9a186');
+    tree(10.9,2.48,'#ad7e88');
+  });
 }
 const cascades=[
   {x:1.56,z:8.31,height:.82,width:.19},
@@ -503,19 +536,21 @@ function buildOutskirts() {
   }
 }
 function movingObjects(time) {
-  const travel=(time*.87)%42;
-  const eastbound=travel<21;
-  const x=eastbound?-4.7+travel:37.3-travel;
-  const trafficZ=area==='otawara'?4.23:5.02;
+  const [left,,right]=modelBounds[area];
+  const roadLength=right-left-.45;
+  const travel=(time*.87)%(2*roadLength);
+  const eastbound=travel<roadLength;
+  const x=left+(eastbound?travel:2*roadLength-travel);
+  const trafficZ=area==='otawara'?4.46:5.02;
   const car=(x,z,color)=>{
     box(x,z,.44,.21,.14,color,.035);
     box(x+.12,z+.01,.2,.19,.095,'#668191',.17);
     box(x+.018,z-.012,.095,.028,.07,'#38424b',.035);
     box(x+.31,z-.012,.095,.028,.07,'#38424b',.035);
   };
-  if(x>=-4&&x<=15.55)car(x,trafficZ+(eastbound?.14:-.22),'#ca745f');
-  const other=15.6-((time*.62+7)%20.3);
-  if(other>=-4)car(other,trafficZ-.18,'#f4db9b');
+  car(x,trafficZ+(eastbound?.14:-.22),'#ca745f');
+  const other=right-.45-((time*.62+7)%roadLength);
+  car(other,trafficZ-.18,'#f4db9b');
   if(area==='nasu'){
     const t=(1-Math.cos(time*.55))/2;
     const cableX=1.48+2.14*t,cableZ=1.37+1.17*t,cableY=1.92-.86*t;
@@ -523,20 +558,20 @@ function movingObjects(time) {
     box(cableX,cableZ,.27,.22,.23,'#b95749',cableY-.43);
     box(cableX+.025,cableZ+.224,.22,.02,.11,'#a0ccd0',cableY-.37);
   }else{
-    animateFalls(time);
+    atLandmark(8,fallsOrigin,()=>animateFalls(time));
     for(let i=0;i<8;i++){
-      const z=-2.78+(i*2.19+time*.47)%16.38;
-      box(5.7+(i%3)*.15,z,.14,.03,.003,'#bfdfd8',.007);
+      const z=-1.78+(i*3.69+time*.47)%30.38;
+      box(24.2+1.35*Math.sin(z*.23)+(i%3)*.15,z,.14,.03,.003,'#bfdfd8',.007);
     }
   }
 }
 function makeTown() {
   faces=[];
   ground=[];
-  tile(-4,-3,20,17,colors.grass);
-  buildOutskirts();
+  const [left,top,right,bottom]=modelBounds[area];
+  tile(left,top,right-left,bottom-top,colors.grass);
   if(area==='otawara')buildOtawara();
-  else buildNasu();
+  else {buildOutskirts();buildNasu();}
 }
 function render() {
   if(photoMode){drawAerial();return;}
@@ -550,7 +585,7 @@ function render() {
   }
   ctx.setTransform(ratio,0,0,ratio,0,0);
   ctx.clearRect(0,0,w,h);
-  const scale=zoom*Math.min(w/26.8,h/(overhead?26:17));
+  const scale=modelScale(w,h);
   const pitch=overhead?Math.PI/2:.56;
   const cosine=Math.cos(angle),sine=Math.sin(angle);
   const cp=Math.cos(pitch),sp=Math.sin(pitch);
@@ -566,7 +601,8 @@ function render() {
     ctx.fillStyle=color;
     ctx.fill();
   }
-  const corners=townCorners;
+  const [left,top,right,bottom]=modelBounds[area];
+  const corners=[[left,0,top],[right,0,top],[right,0,bottom],[left,0,bottom]];
   const shadow=corners.map(p=>project(p)).map(([x,y])=>[x+4,y+scale*.45]);
   ctx.save();
   ctx.shadowColor='#324a4e77';
@@ -681,8 +717,9 @@ get('overhead').addEventListener('click',()=>{
 });
 function resetCamera(){
   zoom=1;
-  centerX=6;
-  centerZ=5;
+  const [left,top,right,bottom]=modelBounds[area];
+  centerX=(left+right)/2;
+  centerZ=(top+bottom)/2;
   angle=-.55;
   overhead=false;
   get('overhead').setAttribute('aria-pressed','false');
@@ -695,20 +732,21 @@ canvas.addEventListener('pointerdown',event=>{
 canvas.addEventListener('pointermove',event=>{
   if(drag?.id!==event.pointerId)return;
   if(drag.pan){
-    const inverseScale=1/(zoom*Math.min(canvas.clientWidth/26.8,canvas.clientHeight/(overhead?26:17)));
+    const inverseScale=1/modelScale(canvas.clientWidth,canvas.clientHeight);
     const lateral=(drag.x-event.clientX)*inverseScale;
     const depth=(drag.y-event.clientY)*inverseScale/(overhead?1:Math.sin(.56));
-    centerX=Math.max(-3,Math.min(15,drag.centerX+lateral*Math.cos(angle)+depth*Math.sin(angle)));
-    centerZ=Math.max(-2,Math.min(13,drag.centerZ-lateral*Math.sin(angle)+depth*Math.cos(angle)));
+    const [left,top,right,bottom]=modelBounds[area];
+    centerX=Math.max(left,Math.min(right,drag.centerX+lateral*Math.cos(angle)+depth*Math.sin(angle)));
+    centerZ=Math.max(top,Math.min(bottom,drag.centerZ-lateral*Math.sin(angle)+depth*Math.cos(angle)));
   }else angle=drag.angle+(event.clientX-drag.x)*.009;
   render();
 });
 canvas.addEventListener('lostpointercapture',()=>{drag=null;});
 get('picture').addEventListener('error',()=>{get('photo').hidden=true;});
 function setZoom(next){
-  zoom=Math.max(.85,Math.min(3,next));
+  zoom=Math.max(.85,Math.min(zoomLimit(),next));
   get('zoomOut').disabled=zoom<=.85;
-  get('zoomIn').disabled=zoom>=3;
+  get('zoomIn').disabled=zoom>=zoomLimit();
   render();
 }
 get('zoomIn').addEventListener('click',()=>photoMode?changeMapZoom(mapZoom+1):setZoom(zoom*1.3));
@@ -718,7 +756,7 @@ get('focusSpot').addEventListener('click',()=>{
   if(!selectedSpot)return;
   if(photoMode){mapZoom=17;mapCenter=world(selectedSpot.location.split(',').map(Number),mapZoom);drawAerial();return;}
   [centerX,centerZ]=selectedSpot.model;
-  setZoom(2.3);
+  setZoom(area==='otawara'?5:2.3);
 });
 function animation(time){
   if(photoMode||paused||document.hidden){previousFrame=null;frameId=undefined;return;}
@@ -745,6 +783,7 @@ document.addEventListener('visibilitychange',syncMotion);
 new ResizeObserver(render).observe(get('scene'));
 get('aerialMode').addEventListener('click',()=>switchMode(true));
 get('modelMode').addEventListener('click',()=>switchMode(false));
+resetCamera();
 loadArea();
 switchMode(false);
 </script>
