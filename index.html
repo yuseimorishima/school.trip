@@ -56,7 +56,7 @@
 const regions = {
   all: {bounds:[0,0,1,1], labels:[['那須高原',.26,.31],['大田原・黒羽',.63,.59],['那珂川',.83,.53]]},
   nasu: {bounds:[.02,.02,.55,.48], labels:[['那須連山',.14,.13],['那須湯本',.3,.32]]},
-  otawara: {bounds:[.41,.44,.98,.98], labels:[['黒羽',.65,.65],['那珂川',.8,.59]]}
+  otawara: {bounds:[.28,.44,.98,.98], labels:[['黒羽',.65,.65],['那珂川',.8,.59]]}
 };
 const mountainPhoto = {
   url:'https://upload.wikimedia.org/wikipedia/commons/d/dd/Nasu_chausudake.jpg',
@@ -77,7 +77,9 @@ const spots = [
   {name:'那須高原 南ヶ丘牧場',short:'南ヶ丘牧場',region:'nasu',type:'牧場体験',x:.37,y:.39,url:'https://minamigaoka.co.jp/',description:'牧場の動物に出会い、乳製品やソフトクリームを楽しめます。体験の実施状況は公式案内へ。'},
   {name:'黒羽芭蕉の館',short:'芭蕉の館',region:'otawara',type:'文学と歴史',x:.62,y:.7,url:'https://www.city.ohtawara.tochigi.jp/docs/2013082780058/',description:'「おくのほそ道」の旅で黒羽に滞在した松尾芭蕉にまつわる資料や、黒羽藩主・大関家の資料を展示しています。'},
   {name:'雲巌寺',short:'雲巌寺',region:'otawara',type:'寺と里山',x:.87,y:.76,url:'https://www.city.ohtawara.tochigi.jp/docs/2013082765673/',description:'山あいにある禅寺。朱塗りの反り橋の先に山門と石段が続きます。',photo:templePhoto},
-  {name:'栃木県なかがわ水遊園',short:'なかがわ水遊園',region:'otawara',type:'川と水族館',x:.68,y:.89,url:'https://www.tnap.jp/',description:'地元の那珂川から世界の川まで、淡水の生きものを観察できる水族館です。'}
+  {name:'栃木県なかがわ水遊園',short:'なかがわ水遊園',region:'otawara',type:'川と水族館',x:.68,y:.89,url:'https://www.tnap.jp/',description:'地元の那珂川から世界の川まで、淡水の生きものを観察できる水族館です。'},
+  {"name":"滝沢神社 不動の滝","short":"不動の滝","region":"otawara","type":"滝と神社","x":0.39,"y":0.84,"url":"https://www.ohtawara.info/spot_detail.html?id=9","location":"36.816988,140.003272","description":"箒川沿いの大田原市滝沢にある滝。近くで石に彫られた不動明王を祀ったことが、滝の名の由来と伝わります。"},
+  {"name":"お城山遊歩道（龍城公園）","short":"お城山遊歩道","region":"otawara","type":"城跡散策","x":0.48,"y":0.62,"url":"https://www.ohtawara.info/spot_detail.html?id=17","location":"36.868449,140.034587","description":"大田原城跡を整備した龍城公園（お城山）を歩く散策スポット。本丸跡の広場からは市街地や那須連山を見渡せます。"}
 ];
 const get = id => document.getElementById(id);
 const canvas = get('terrain');
@@ -192,7 +194,7 @@ function selectSpot(index) {
   get('photo').hidden=!spot?.photo;
   if(!spot) return;
   get('official').href=spot.url;
-  get('directions').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(spot.name+' 栃木県');
+  get('directions').href='https://www.google.com/maps/search/?api=1&query='+encodeURIComponent(spot.location ?? spot.name+' 栃木県');
   if(spot.photo) {
     const {url,alt,page,author,license}=spot.photo;
     get('picture').src=url;
