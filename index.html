@@ -9,25 +9,32 @@
 :root{--ink:#253645;--muted:#526477;--paper:#fffcf5;--blue:#244964;--line:#d8dedc;--accent:#eec783}
 *{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.6 system-ui,sans-serif}button,a{-webkit-tap-highlight-color:transparent;color:inherit}button{font:inherit;cursor:pointer}a{text-underline-offset:.2em}button:focus-visible,a:focus-visible{outline:3px solid #a64f2d;outline-offset:4px}header,main,footer{width:min(1440px,100%);margin:auto;padding-inline:clamp(1rem,4vw,4rem)}header{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-block:1.05rem;border-bottom:1px solid var(--line)}.brand{display:flex;align-items:center;gap:.65rem;font-weight:850;font-size:1rem}.brand i{display:grid;place-items:center;width:2rem;height:2rem;background:#325d71;color:#fff;border-radius:.55rem;font-style:normal}.top-link{font-size:.83rem;font-weight:750}.intro{display:flex;justify-content:space-between;align-items:end;gap:.8rem;flex-wrap:wrap;margin:clamp(1.4rem,4vw,3rem) 0 1rem}h1,h2,p{margin:0}h1{font-size:clamp(2rem,5vw,4.4rem);line-height:1.08;letter-spacing:-.06em;font-weight:950}.intro p{margin-top:.55rem;color:var(--muted);font-size:.92rem}.tabs{display:flex;gap:.35rem;background:#e8eeeb;border-radius:1rem;padding:.3rem}.tabs button,.view button{padding:.48rem .8rem;border:0;border-radius:.72rem;font-weight:800;font-size:.86rem;background:transparent}.tabs button[aria-pressed=true]{background:var(--blue);color:white}.stage{display:grid;grid-template-columns:minmax(0,1fr) minmax(225px,255px);background:#eaf1ed;border:1px solid #cbdad7;border-radius:1.35rem;overflow:hidden}.scene{position:relative;isolation:isolate;min-width:0;height:clamp(500px,70vh,850px);overflow:hidden;background:radial-gradient(ellipse at 50% 38%,#fcf6df,#e5eee7 67%,#c8dbda)}canvas,.pins{position:absolute;inset:0;width:100%;height:100%}canvas{touch-action:pan-y;cursor:grab}canvas:active{cursor:grabbing}.pins{pointer-events:none}.pin{position:absolute;pointer-events:auto;transform:translate(-50%,-50%);display:grid;place-items:center;border:2px solid white;border-radius:50%;width:34px;height:34px;padding:0;background:var(--blue);color:white;font-weight:850;box-shadow:0 2px 12px #263d4b70;z-index:1}.pin[aria-pressed=true],.pin:hover,.pin:focus-visible{z-index:3;background:#a64f2d}.pin span{position:absolute;bottom:calc(100% + .3rem);padding:.12rem .48rem;border-radius:.35rem;background:#fffdf6;color:var(--ink);box-shadow:0 2px 8px #263d4b28;white-space:nowrap;font-size:.76rem;pointer-events:none}.view{display:flex;flex-wrap:wrap;max-width:calc(100% - 1.5rem);position:absolute;right:.75rem;bottom:.75rem;gap:.12rem;padding:.2rem;border:1px solid #cbdad7;background:#fffdf6;border-radius:.9rem;z-index:4}.view button{min-width:2.2rem}.view button:hover{background:#e6eeeb}.hint{position:absolute;left:.8rem;top:.8rem;font-size:.74rem;font-weight:760;background:#ffffffbf;border-radius:.6rem;padding:.28rem .55rem;pointer-events:none}.sidebar{background:#f9f6ec;padding:clamp(.85rem,2vw,1.45rem);border-left:1px solid #cbdad7}.sidebar h2{font-size:1.06rem;margin-bottom:.45rem}.spots{display:grid;gap:.28rem}.spots button{display:flex;gap:.58rem;align-items:center;width:100%;text-align:left;border:1px solid transparent;background:transparent;border-radius:.7rem;padding:.38rem .32rem;font-weight:750;font-size:.83rem}.spots button:hover,.spots button[aria-pressed=true]{background:#e0ebe6;border-color:#c5d7d2}.spots b{display:grid;place-items:center;border-radius:.42rem;background:#ebe4d4;color:#3f4d55;width:1.65rem;height:1.65rem;flex:none}.spots small{display:block;font-weight:550;color:var(--muted)}.detail{margin-top:.8rem;border-top:1px solid var(--line);padding-top:.7rem}.detail h2{font-size:1.3rem;line-height:1.3}.detail p{font-size:.87rem}.detail figure{margin:.75rem 0 0}.detail img{display:block;width:100%;height:112px;object-fit:cover;border-radius:.58rem}.credit{font-size:.66rem;color:var(--muted)}.links{display:flex;flex-wrap:wrap;gap:.3rem .8rem;margin-top:.55rem}.links button{border:0;background:#dce9e3;border-radius:.45rem;padding:.16rem .5rem;font-size:.77rem;font-weight:800}.links a{font-weight:800;font-size:.77rem}[hidden]{display:none!important}footer{margin-top:.7rem;margin-bottom:1.6rem;color:var(--muted);font-size:.76rem}
 @media(max-width:880px){.stage{grid-template-columns:1fr}.scene{height:clamp(345px,65vw,570px)}.sidebar{border-left:0;border-top:1px solid #cbdad7}.spots{grid-template-columns:repeat(2,minmax(0,1fr))}.detail img{max-width:340px}}@media(max-width:520px){.pin{width:30px;height:30px;font-size:.8rem}.pin span{display:none}.pin[aria-pressed=true] span,.pin:focus-visible span{display:block}.view button{padding:.43rem .55rem}.spots button{font-size:.77rem}.intro{margin-top:1.1rem}}
+#aerial{position:absolute;inset:0;overflow:hidden;background:#364b44;touch-action:none;cursor:grab}#aerial:active{cursor:grabbing}#aerial img{position:absolute;top:0;left:0;width:256px;height:256px;max-width:none;pointer-events:none;user-select:none}.mode{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:.7rem}.mode button{border:1px solid #cbdad7;border-radius:.7rem;padding:.38rem .75rem;background:#fffdf6;font-weight:800;font-size:.85rem}.mode button[aria-pressed=true]{background:var(--blue);color:white}.source{position:absolute;bottom:.65rem;left:.75rem;padding:.16rem .42rem;background:#fffdf6;border-radius:.35rem;font-size:.69rem;z-index:4}.photo-view .pin span{display:none}.photo-view .pin[aria-pressed=true] span,.photo-view .pin:hover span,.photo-view .pin:focus-visible span{display:block}.photo-view .pin{width:29px;height:29px;font-size:.79rem}.photo-view .hint{z-index:4}
 </style>
 </head>
 <body>
 <header><div class="brand"><i aria-hidden="true">↗</i> よりみち 那須・大田原</div><a class="top-link" href="#spots-title">見どころ一覧 ↓</a></header>
 <main>
-<section class="intro"><div><h1>街をのぞいて、<br>よりみち。</h1><p>那須高原と大田原・黒羽を、ミニチュアの街から探検。</p></div>
+<section class="intro"><div><h1>街をのぞいて、<br>よりみち。</h1><p>航空写真で街を見下ろし、観光ピンから見どころを探そう。</p></div>
 <div class="tabs" role="group" aria-label="見るエリア" id="tabs"><button type="button" data-area="otawara" aria-pressed="true">大田原・黒羽</button><button type="button" data-area="nasu" aria-pressed="false">那須高原</button></div></section>
-<section class="stage" aria-label="ミニチュア観光マップ">
+<div class="mode" role="group" aria-label="地図の表示">
+<button type="button" id="aerialMode" aria-pressed="true">航空写真</button>
+<button type="button" id="modelMode" aria-pressed="false">動くジオラマ</button>
+</div>
+<section class="stage" aria-label="観光マップ">
 <div class="scene" id="scene">
-<canvas id="town" aria-hidden="true"></canvas>
+<div id="aerial" aria-label="航空写真"></div>
+<canvas id="town" hidden aria-hidden="true"></canvas>
 <div class="pins" id="pins" role="group" aria-label="観光ピン"></div>
-<div class="hint">ドラッグで回転</div>
+<div class="hint" id="hint">ドラッグで移動</div>
+<a class="source" id="source" href="https://maps.gsi.go.jp/development/ichiran.html">出典：国土地理院</a>
 <div class="view" role="group" aria-label="眺め方"><button type="button" id="left" aria-label="左に回転">↶</button><button type="button" id="right" aria-label="右に回転">↷</button><button type="button" id="overhead" aria-pressed="false">真上</button><button type="button" id="zoomOut" aria-label="縮小">−</button><button type="button" id="zoomIn" aria-label="拡大">＋</button><button type="button" id="motion" aria-pressed="false">動きを止める</button><button type="button" id="reset">戻す</button></div>
 </div>
 <aside class="sidebar"><h2 id="spots-title">この街の見どころ</h2><div class="spots" id="spots"></div>
 <div class="detail" id="detail" hidden aria-live="polite"><h2 id="name"></h2><p id="description"></p><figure id="photo" hidden><img id="picture" alt=""><figcaption id="credit" class="credit"></figcaption></figure><div class="links"><button type="button" id="focusSpot">模型で近づく</button><a id="official">公式案内 ↗</a><a id="directions">実際の地図 ↗</a></div></div>
 </aside></section>
 </main>
-<footer>街並みと位置関係は、観光スポットをもとにアレンジした模型です。実際の場所は各スポットの「実際の地図」から確認できます。</footer>
+<footer>航空写真の撮影時期は場所によって異なります。ジオラマは観光スポットを題材にした模型です。</footer>
 <noscript>ミニチュアマップを見るにはJavaScriptを有効にしてください。</noscript>
 <script>
 const spots = [
@@ -179,12 +186,100 @@ const spots = [
     ],
     "location": "36.868449,140.034587",
     "number": 9
-  }
+  },
+{"name":"那須温泉神社","short":"温泉神社","region":"nasu","type":"湯本の神社","model":[5.2,5.43,1.15],"location":"37.10003,139.99896","number":10,"url":"https://www.nasukogen.org/charm/","description":"那須湯本にある神社。殺生石から近く、木立に囲まれた参道と社殿を見られます。"},
+{"name":"黒羽城址公園","short":"黒羽城址公園","region":"otawara","type":"城跡と眺め","model":[10.65,3.02,1.1],"location":"36.869648,140.121619","number":11,"url":"https://www.ohtawara.info/spot_detail.html?id=29","description":"黒羽城の跡を整備した公園。本丸跡から那珂川や那須連山を眺められます。"}
 ];
 const get = id => document.getElementById(id);
 const canvas = get('town');
 const ctx = canvas.getContext('2d');
 let area = 'otawara';
+let photoMode=true;
+let mapZoom=15;
+let mapCenter;
+const tiles=new Map();
+const mapHomes={otawara:[36.8662,140.0315],nasu:[37.10025,139.99895]};
+const photoSurface=get('aerial');
+function world([lat,lon],level){
+  const size=256*2**level;
+  const sine=Math.sin(lat*Math.PI/180);
+  return [(lon+180)/360*size,(.5-Math.log((1+sine)/(1-sine))/(4*Math.PI))*size];
+}
+function resetAerial(){
+  mapZoom=15;
+  mapCenter=world(mapHomes[area],mapZoom);
+}
+resetAerial();
+function drawAerial(){
+  const w=photoSurface.clientWidth,h=photoSurface.clientHeight;
+  if(!w||!h)return;
+  const origin=[mapCenter[0]-w/2,mapCenter[1]-h/2];
+  const used=new Set();
+  for(let x=Math.floor(origin[0]/256);x<=Math.floor((origin[0]+w)/256);x++){
+    for(let y=Math.floor(origin[1]/256);y<=Math.floor((origin[1]+h)/256);y++){
+      const key=mapZoom+'/'+x+'/'+y;
+      used.add(key);
+      if(!tiles.has(key)){
+        const tile=document.createElement('img');
+        tile.alt='';
+        tile.draggable=false;
+        tile.src='https://cyberjapandata.gsi.go.jp/xyz/seamlessphoto/'+key+'.jpg';
+        photoSurface.append(tile);
+        tiles.set(key,tile);
+      }
+      tiles.get(key).style.transform='translate('+Math.round(x*256-origin[0])+'px,'+Math.round(y*256-origin[1])+'px)';
+    }
+  }
+  for(const [key,tile] of tiles){
+    if(!used.has(key)){tile.remove();tiles.delete(key);}
+  }
+  for(const button of get('pins').children){
+    const [x,y]=world(spots[Number(button.dataset.index)].location.split(',').map(Number),mapZoom);
+    button.style.left=(x-origin[0])+'px';
+    button.style.top=(y-origin[1])+'px';
+    button.hidden=x-origin[0]<12||x-origin[0]>w-12||y-origin[1]<12||y-origin[1]>h-12;
+  }
+  get('zoomIn').disabled=mapZoom>=18;
+  get('zoomOut').disabled=mapZoom<=12;
+}
+function changeMapZoom(next){
+  next=Math.max(12,Math.min(18,next));
+  const ratio=2**(next-mapZoom);
+  mapCenter=mapCenter.map(value=>value*ratio);
+  mapZoom=next;
+  drawAerial();
+}
+let photoDrag;
+photoSurface.addEventListener('pointerdown',event=>{
+  if(!event.isPrimary||event.button!==0)return;
+  photoDrag={id:event.pointerId,x:event.clientX,y:event.clientY,center:mapCenter};
+  photoSurface.setPointerCapture(event.pointerId);
+});
+photoSurface.addEventListener('pointermove',event=>{
+  if(photoDrag?.id!==event.pointerId)return;
+  const home=world(mapHomes[area],mapZoom);
+  const limit=256*2**(mapZoom-11);
+  mapCenter=[photoDrag.center[0]+photoDrag.x-event.clientX,photoDrag.center[1]+photoDrag.y-event.clientY]
+    .map((value,i)=>Math.max(home[i]-limit,Math.min(home[i]+limit,value)));
+  drawAerial();
+});
+photoSurface.addEventListener('lostpointercapture',()=>{photoDrag=null;});
+function switchMode(showPhoto){
+  photoMode=showPhoto;
+  photoSurface.hidden=!showPhoto;
+  canvas.hidden=showPhoto;
+  get('scene').classList.toggle('photo-view',showPhoto);
+  get('aerialMode').setAttribute('aria-pressed',String(showPhoto));
+  get('modelMode').setAttribute('aria-pressed',String(!showPhoto));
+  for(const id of ['left','right','overhead','motion'])get(id).hidden=showPhoto;
+  get('source').hidden=!showPhoto;
+  get('hint').textContent=showPhoto?'ドラッグで移動':'ドラッグで回転';
+  get('focusSpot').textContent=showPhoto?'航空写真で近づく':'模型で近づく';
+  get('zoomIn').disabled=!showPhoto&&zoom>=3;
+  get('zoomOut').disabled=!showPhoto&&zoom<=.85;
+  render();
+  syncMotion();
+}
 let angle = -.55;
 let overhead = false;
 let faces = [];
@@ -284,6 +379,8 @@ function buildOtawara() {
   box(7.79,8.02,1.9,.32,.14,'#6aaab0',.75);
   for(let i=0;i<5;i++)box(7.7+i*.42,9.05,.26,.035,.31,'#467583',.17);
   rows(10,8.58,3,.43,'#c78a8b');
+  box(10.29,2.65,.78,.7,.24,'#a9a186');
+  tree(10.9,2.88,'#ad7e88');
 }
 function buildNasu() {
   tile(.25,.25,4.52,3.42,'#919e75');
@@ -313,6 +410,7 @@ function buildNasu() {
   rows(.55,7.27,8,.58,'#b9818c');
   house(8.12,7.16,1.48,.85,.67,'#e9d2a4',colors.red);
   house(10.05,7.37,.87,.7,.58,'#e9d2a4',colors.roof);
+  house(4.78,5.11,.75,.62,.62,'#ad735f','#526273');
   fence(7.1,8.79,4.2);
   for(let i=0;i<4;i++) {
     box(7.52+i*.83,8.44,.17,.24,.17,i%2?'#a26c56':'#f4ead5',.07);
@@ -404,6 +502,7 @@ function makeTown() {
   else buildNasu();
 }
 function render() {
+  if(photoMode){drawAerial();return;}
   if(!ctx)return;
   const w=canvas.clientWidth,h=canvas.clientHeight;
   if(!w||!h)return;
@@ -499,7 +598,10 @@ function loadArea() {
       button.type='button';
       button.dataset.index=index;
       button.setAttribute('aria-pressed','false');
-      button.addEventListener('click',()=>choose(spot));
+      button.addEventListener('click',()=>{
+        choose(spot);
+        if(photoMode&&parent==='spots')get('focusSpot').click();
+      });
       if(parent==='pins'){
         button.className='pin';
         button.setAttribute('aria-label',spot.name);
@@ -528,6 +630,7 @@ get('tabs').addEventListener('click',event=>{
   area=button.dataset.area;
   for(const item of get('tabs').children)item.setAttribute('aria-pressed',String(item===button));
   resetCamera();
+  resetAerial();
   get('zoomOut').disabled=false;
   get('zoomIn').disabled=false;
   loadArea();
@@ -571,16 +674,17 @@ function setZoom(next){
   get('zoomIn').disabled=zoom>=3;
   render();
 }
-get('zoomIn').addEventListener('click',()=>setZoom(zoom*1.3));
-get('zoomOut').addEventListener('click',()=>setZoom(zoom/1.3));
-get('reset').addEventListener('click',()=>{resetCamera();setZoom(1);});
+get('zoomIn').addEventListener('click',()=>photoMode?changeMapZoom(mapZoom+1):setZoom(zoom*1.3));
+get('zoomOut').addEventListener('click',()=>photoMode?changeMapZoom(mapZoom-1):setZoom(zoom/1.3));
+get('reset').addEventListener('click',()=>{if(photoMode){resetAerial();drawAerial();}else{resetCamera();setZoom(1);}});
 get('focusSpot').addEventListener('click',()=>{
   if(!selectedSpot)return;
+  if(photoMode){mapZoom=17;mapCenter=world(selectedSpot.location.split(',').map(Number),mapZoom);drawAerial();return;}
   [centerX,centerZ]=selectedSpot.model;
   setZoom(2.3);
 });
 function animation(time){
-  if(paused||document.hidden){previousFrame=null;frameId=undefined;return;}
+  if(photoMode||paused||document.hidden){previousFrame=null;frameId=undefined;return;}
   if(previousFrame===null)previousFrame=time;
   if(time-previousFrame>=33){
     elapsed+=Math.min(time-previousFrame,100)/1000;
@@ -602,8 +706,10 @@ get('motion').addEventListener('click',()=>{paused=!paused;syncMotion();});
 reducedMotion.addEventListener('change',event=>{paused=event.matches;syncMotion();});
 document.addEventListener('visibilitychange',syncMotion);
 new ResizeObserver(render).observe(get('scene'));
+get('aerialMode').addEventListener('click',()=>switchMode(true));
+get('modelMode').addEventListener('click',()=>switchMode(false));
 loadArea();
-syncMotion();
+switchMode(true);
 </script>
 </body>
 </html>
